@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products Management - My ERP System</title>
+</head>
+<body>
+  <h1>Products Management</h1>
+  <table id="product-table" border="1" align="center">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Stock Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Products data will be loaded here dynamically -->
+    </tbody>
+  </table>
+
+  <script>
+    // Define mock products data
+    const productsData = [
+      { name: 'Product 1', category: 'Category A', price: 10, stockQuantity: 100 },
+      { name: 'Product 2', category: 'Category B', price: 20, stockQuantity: 50 },
+      { name: 'Product 3', category: 'Category C', price: 30, stockQuantity: 200 }
+    ];
+
+    // Render products data dynamically
+    const productTable = document.getElementById('product-table');
+    const tbody = productTable.getElementsByTagName('tbody')[0];
+
+    productsData.forEach(product => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${product.name}</td>
+        <td>${product.category}</td>
+        <td>${product.price}</td>
+        <td>${product.stockQuantity}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  </script>
+</body>
+</html>

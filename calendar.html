@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar View - My ERP System</title>
+  <style>
+    /* Styles for the calendar */
+    .calendar {
+      font-family: Arial, sans-serif;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .calendar-header {
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .calendar-body {
+      padding: 10px;
+    }
+
+    .day {
+      display: inline-block;
+      width: 14.28%; /* 100% / 7 days */
+      text-align: center;
+      border: 1px solid #ddd;
+      padding: 5px;
+    }
+
+    .today {
+      background-color: #e0f0ff;
+    }
+
+    .event {
+      background-color: #ffc107;
+      border-radius: 3px;
+      margin-bottom: 2px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Orders Calendar View</h1>
+  <div id="calendar" class="calendar"></div>
+  
+  <script>
+    // Sample event data
+    const sampleEvents = [
+      { date: '2022-03-15', title: 'Event 1' },
+      { date: '2022-03-20', title: 'Event 2' },
+      { date: '2022-03-25', title: 'Event 3' }
+    ];
+
+    // Function to generate calendar for a given month and year with events
+    function generateCalendar(month, year, events) {
+      const calendar = document.getElementById('calendar');
+      const currentDate = new Date(year, month);
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0-based index (0: Sunday)
+
+      // Clear existing content
+      calendar.innerHTML = '';
+
+      // Create header
+      const header = document.createElement('div');
+      header.classList.add('calendar-header');
+      header.innerHTML = `
+        <button onclick="prevMonth()">Prev</button>
+        <span>${currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+        <button onclick="nextMonth()">Next</button>
+      `;
+      calendar.appendChild(header);
+
+      // Create body
+      const body = document.createElement('div');
+      body.classList.add('calendar-body');
+
+      // Create day cells
+      for (let i = 0; i < firstDayOfMonth; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.classList.add('day');
+        body.appendChild(emptyCell);
+      }
+
+      for (let i = 1; i <= daysInMonth; i++) {
+        const dayCell = document.createElement('div');
+        dayCell.classList.add('day');
+        dayCell.innerText = i;
+
+        // Add 'today' class to current day
+        if (currentDate.getDate() === i && currentDate.getMonth() === month && currentDate.getFullYear() === year) {
+          dayCell.classList.add('today');
+        }
+
+        // Filter events for the current day
+        const eventsOnDay = events.filter(event => event.date === `${year}-${padNumber(month + 1)}-${padNumber(i)}`);
+        // Add events to the day cell
+        eventsOnDay.forEach(event => {
+          const eventDiv = document.createElement('div');
+          eventDiv.classList.add('event');
+          eventDiv.innerText = event.title;
+          dayCell.appendChild(eventDiv);
+        });
+
+        body.appendChild(dayCell);
+      }
+
+      calendar.appendChild(body);
+    }
+
+    // Function to pad single digit numbers with leading zero
+    function padNumber(number) {
+      return number < 10 ? '0' + number : number;
+    }
+
+    // Function to go to previous month
+    function prevMonth() {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      generateCalendar(currentMonth, currentYear, sampleEvents);
+    }
+
+    // Function to go to next month
+    function nextMonth() {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      generateCalendar(currentMonth, currentYear, sampleEvents);
+    }
+
+    // Initial display for the current month
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    generateCalendar(currentMonth, currentYear, sampleEvents);
+  </script>
+</body>
+</html>
